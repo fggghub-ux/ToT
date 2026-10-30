@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <!-- 状态栏：black-translucent。**不要再改成 default。**
+         v76.313 为了消掉顶部那道白改过一次 default，v76.319 回退了：
+         · 那道白是 iOS 27 自己的行为（Safari 在某些站点画、某些不画），不是我们画的，
+           也不归我们管 —— 用户已经确认过这一点。
+         · 改成 default 之后反而把安全区算错了：viewport-fit=cover 仍然让 WebView
+           顶到刘海下面，但 env(safe-area-inset-top) 变成 0，于是桌面组件直接
+           被状态栏和灵动岛压掉一截。
+         结论：顶部这套按 black-translucent + viewport-fit=cover 算，别动。 -->
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="LiToT" />
+        <meta name="theme-color" content="#f4f4f2" />
+        <meta name="color-scheme" content="light" />
+        <link id="lt-icon" rel="icon" type="image/png" sizes="192x192" href="/ToT/icon-192.png?v=4" />
+        <link id="lt-touch-180" rel="apple-touch-icon" sizes="180x180" href="/ToT/icon-180.png?v=4" />
+        <link id="lt-touch-192" rel="apple-touch-icon" sizes="192x192" href="/ToT/icon-192.png?v=4" />
+        <link id="lt-manifest" rel="manifest" href="/ToT/manifest.webmanifest" />
+        <script>
+            /* v76.771 主屏图标：设置 → 外观 → App 图标里选的（localStorage litot_app_icon）。默认小兔，选了 text 就换成 LiToT 文字。
+         iOS 在「添加到主屏幕」那一刻读这几个链接，所以要在页面最开头就换好；已经加到主屏的不会变，要删掉重新添加。 */
+            (function () {
+                var v = null;
+                try {
+                    v = localStorage.getItem("litot_app_icon");
+                } catch (_) {}
+                if (v !== "text") return;
+                var set = function (id, href) {
+                    var el = document.getElementById(id);
+                    if (el) el.setAttribute("href", href);
+                };
+                set("lt-icon", "/ToT/icon-text-192.png?v=3");
+                set("lt-touch-180", "/ToT/icon-text-180.png?v=3");
+                set("lt-touch-192", "/ToT/icon-text-192.png?v=3");
+                set("lt-manifest", "/ToT/manifest-text.webmanifest");
+            })();
+        </script>
+        <title>LiToT</title>
+        <!-- v76.766 启动画面：JS 包下载 / 解析的这几秒以前是一整片白，分不清在加载还是坏了。
+         静态写在 #root 里，React 第一次渲染时整块替换掉；样子和下面「更新」那一页、iOS 外壳的原生遮罩是同一个，
+         三者接力时看不出切换。别给它加依赖或外链 —— 它必须在任何资源到达之前就能画出来。
+         v76.771 换成小兔（src/lib/bunny.js 同一只，路径在 test 里核对一致）：眨眼、晃耳朵、轻轻上下，三颗小圆点依次跳。 -->
+        <style>
+            .lt-bunny {
+                display: block;
+                overflow: visible;
+            }
+            .lt-bunny-outline path {
+                fill: #5a5a58;
+                stroke: #5a5a58;
+                stroke-width: 6.4;
+                stroke-linejoin: round;
+            }
+            .lt-bunny-fill path {
+                fill: #fff;
+                stroke: none;
+            }
+            .lt-bunny-eye {
+                fill: #5a5a58;
+            }
+            .lt-bunny-mouth {
+                fill: none;
+                stroke: #5a5a58;
+                stroke-width: 3;
+                stroke-linecap: round;
+            }
+            .lt-bunny.is-alive .lt-bunny-bob {
+                animation: lt-bunny-bob 2.4s ease-in-out infinite;
+            }
+            .lt-bunny.is-alive .lt-bunny-earl {
+                transform-origin: 50px 62px;
+                animation: lt-bunny-earl 2.4s ease-in-out infinite;
+            }
+            .lt-bunny.is-alive .lt-bunny-earr {
+                transform-origin: 70px 62px;
+                animation: lt-bunny-earr 2.4s ease-in-out infinite;
+            }
+            .lt-bunny.is-alive .lt-bunny-eye {
+                transform-box: fill-box;
+                transform-origin: center;
+                animation: lt-bunny-blink 3.6s infinite;
+            }
+            @keyframes lt-bunny-bob {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-3.5px);
+                }
+            }
+            @keyframes lt-bunny-earl {
+                0%,
+                100% {
+                    transform: rotate(0);
+                }
+                30% {
+                    transform: rotate(-7deg);
+                }
+                60% {
+                    transform: rotate(2deg);
+                }
+            }
+            @keyframes lt-bunny-earr {
+                0%,
+                100% {
+                    transform: rotate(0);
+                }
+                40% {
+                    transform: rotate(7deg);
+                }
+                70% {
+                    transform: rotate(-2deg);
+                }
+            }
+            @keyframes lt-bunny-blink {
+                0%,
+                90%,
+                100% {
+                    transform: scaleY(1);
+                }
+                93% {
+                    transform: scaleY(0.12);
+                }
+                96% {
+                    transform: scaleY(1);
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .lt-bunny.is-alive * {
+                    animation: none !important;
+                }
+            }
+            .litot-boot {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 28px;
+                box-sizing: border-box;
+                background: #f4f4f2;
+                color: #5a5a58;
+                font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+                z-index: 2147483000;
+            }
+            .litot-boot-inner {
+                width: min(292px, 100%);
+                text-align: center;
+            }
+            .litot-boot-inner .lt-bunny {
+                margin: 0 auto 6px;
+            }
+            .litot-boot-shadow {
+                width: 60px;
+                height: 7px;
+                margin: 0 auto 22px;
+                border-radius: 50%;
+                background: rgba(90, 90, 88, 0.12);
+                animation: litot-boot-shadow 2.4s ease-in-out infinite;
+            }
+            .litot-boot-title {
+                font-size: 17px;
+                line-height: 1.3;
+                font-weight: 650;
+                letter-spacing: -0.2px;
+            }
+            .litot-boot-note {
+                margin-top: 7px;
+                min-height: 20px;
+                font-size: 13px;
+                line-height: 1.5;
+                color: #9a9a96;
+            }
+            .litot-boot-dots {
+                display: flex;
+                justify-content: center;
+                gap: 7px;
+                margin-top: 18px;
+            }
+            .litot-boot-dots i {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #5a5a58;
+                opacity: 0.25;
+                animation: litot-boot-hop 1.2s ease-in-out infinite;
+            }
+            .litot-boot-dots i:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+            .litot-boot-dots i:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+            .litot-boot-button {
+                margin-top: 22px;
+                border: 0;
+                border-radius: 999px;
+                background: #5a5a58;
+                color: #fff;
+                padding: 12px 22px;
+                font-size: 15px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .litot-boot-button:active {
+                transform: scale(0.98);
+            }
+            @keyframes litot-boot-shadow {
+                0%,
+                100% {
+                    transform: scaleX(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scaleX(0.82);
+                    opacity: 0.7;
+                }
+            }
+            @keyframes litot-boot-hop {
+                0%,
+                60%,
+                100% {
+                    transform: translateY(0);
+                    opacity: 0.25;
+                }
+                30% {
+                    transform: translateY(-5px);
+                    opacity: 0.9;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .litot-boot-shadow,
+                .litot-boot-dots i {
+                    animation: none;
+                }
+            }
+        </style>
+        <script type="module" crossorigin src="/ToT/assets/app-2c902988.js"></script>
+        <link rel="modulepreload" crossorigin href="/ToT/assets/vendor-7bc51c32.js" />
+        <link rel="modulepreload" crossorigin href="/ToT/assets/vendor-react-3a46a5d3.js" />
+        <link rel="modulepreload" crossorigin href="/ToT/assets/vendor-motion-62fc1664.js" />
+        <link rel="modulepreload" crossorigin href="/ToT/assets/vendor-icons-e63d3118.js" />
+        <link rel="modulepreload" crossorigin href="/ToT/assets/vendor-leaflet-f4c2a8c5.js" />
+        <link rel="stylesheet" href="/ToT/assets/vendor-leaflet-4d8e306f.css" />
+        <link rel="stylesheet" href="/ToT/assets/index-fdd52a35.css" />
+    </head>
+    <body>
+        <div id="root">
+            <div id="litot-boot" class="litot-boot" role="status" aria-live="polite">
+                <div class="litot-boot-inner">
+                    <svg
+                        class="lt-bunny is-alive"
+                        width="104"
+                        height="104"
+                        viewBox="0 0 120 120"
+                        aria-hidden="true"
+                    >
+                        <g class="lt-bunny-bob">
+                            <g class="lt-bunny-outline">
+                                <g class="lt-bunny-earl">
+                                    <path
+                                        d="M45.4 65.6 C38.4 53.4 35.5 34.6 39.8 24.5 C43 17.5 50 17.2 53.9 24.2 C58.6 33.7 59.2 50.8 55.8 64.3 Z"
+                                    />
+                                </g>
+                                <g class="lt-bunny-earr">
+                                    <path
+                                        d="M64.7 64.4 C60.8 50.8 62.6 31.9 69.2 23.1 C74 17.2 80.9 18.5 82.9 26.3 C85.2 36.7 81.6 53.4 75.1 65.6 Z"
+                                    />
+                                </g>
+                                <path
+                                    d="M60 57 C87 57 101 71 101 87 C101 103 84 111 60 111 C36 111 19 103 19 87 C19 71 33 57 60 57 Z"
+                                />
+                            </g>
+                            <g class="lt-bunny-fill">
+                                <g class="lt-bunny-earl">
+                                    <path
+                                        d="M45.4 65.6 C38.4 53.4 35.5 34.6 39.8 24.5 C43 17.5 50 17.2 53.9 24.2 C58.6 33.7 59.2 50.8 55.8 64.3 Z"
+                                    />
+                                </g>
+                                <g class="lt-bunny-earr">
+                                    <path
+                                        d="M64.7 64.4 C60.8 50.8 62.6 31.9 69.2 23.1 C74 17.2 80.9 18.5 82.9 26.3 C85.2 36.7 81.6 53.4 75.1 65.6 Z"
+                                    />
+                                </g>
+                                <path
+                                    d="M60 57 C87 57 101 71 101 87 C101 103 84 111 60 111 C36 111 19 103 19 87 C19 71 33 57 60 57 Z"
+                                />
+                            </g>
+                            <ellipse class="lt-bunny-eye" cx="44" cy="88" rx="3.1" ry="3.3" />
+                            <ellipse class="lt-bunny-eye" cx="76" cy="88" rx="3.1" ry="3.3" />
+                            <path
+                                class="lt-bunny-mouth"
+                                d="M54.6 94.6 C56.4 97.4 58.2 97.5 60 94.9 C61.8 97.5 63.6 97.4 65.4 94.6"
+                            />
+                        </g>
+                    </svg>
+                    <div class="litot-boot-shadow" aria-hidden="true"></div>
+                    <div class="litot-boot-title" id="litot-boot-title">正在载入</div>
+                    <div class="litot-boot-note" id="litot-boot-note">LiToT</div>
+                    <div class="litot-boot-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            /* 启动画面的文字：刚更新完（恢复流程最后一步带着 __litot_updated 回来）说一声；载入慢时告诉她还在动 */
+            (function () {
+                var t = document.getElementById("litot-boot-title");
+                var n = document.getElementById("litot-boot-note");
+                if (!t || !n) return;
+                if (/[?&]__litot_updated=/.test(location.search)) {
+                    t.textContent = "已更新到新版本";
+                    n.textContent = "正在载入";
+                }
+                window.setTimeout(function () {
+                    if (document.getElementById("litot-boot")) n.textContent = "网络有点慢，还在载入";
+                }, 5000);
+            })();
+        </script>
+        <script>
+            /* v76.209 · 单通道 PWA 更新协调器。
+         更新时只允许这里触发一次导航；Service Worker 不再同时强制 navigate，
+         避免一次部署形成两到三条刷新链。 */
+            (function () {
+                /* v77.241 测试版（/beta/）不跑这一套：它不注册自己的 Service Worker，版本号也和根目录的 sw.js 对不上，
+           跑下去会被判成「需要更新」反复刷新。测试版用正式版那一个 SW */
+                if (/^\/beta(\/|$)/.test(location.pathname)) return;
+                /* v76.348 这两条状态以前都在 **sessionStorage** 里，那是"闪退闪进"的根。
+           sessionStorage 的寿命是一个会话：
+             · 装到主屏的 PWA 每次冷启动都是**全新会话** —— 去重键是空的，
+               于是同一个 SW 版本可以被反复当成"新版本"，一次次触发整套恢复；
+             · 而恢复本身就是 location.replace 重载，外面看就是一直闪。
+           换成 localStorage：**同一个 SW 版本这辈子只受控刷新一次**。 */
+                var KEY = "__litot_pwa_recovery_v4";
+                /* v76.812 这个页面自己属于哪一版（和下面 register 的地址是同一个，升版时两处一起改） */
+                var SW_URL = "/ToT/sw.js?v=77.259-tot-pages1";
+                var PAGE_SW_VERSION = "v" + SW_URL.split("v=")[1];
+                var HANDLED_SW_KEY = "__litot_sw_handled_version_v2";
+                var running = false;
+                var booted = false;
+                var stageTimer = 0;
+
+                /* localStorage 在隐私模式 / 存储被禁时会直接抛，这里的每一处读写都得兜住 ——
+           兜不住的话恢复逻辑自己就会抛异常，比它要修的问题更糟。 */
+                function store() {
+                    try {
+                        return window.localStorage;
+                    } catch (_) {
+                        return null;
+                    }
+                }
+                function readKV(k) {
+                    var s = store();
+                    if (!s) return null;
+                    try {
+                        return s.getItem(k);
+                    } catch (_) {
+                        return null;
+                    }
+                }
+                function writeKV(k, v) {
+                    var s = store();
+                    if (!s) return;
+                    try {
+                        s.setItem(k, v);
+                    } catch (_) {}
+                }
+
+                function readState() {
+                    try {
+                        return JSON.parse(readKV(KEY) || "{}");
+                    } catch (_) {
+                        return {};
+                    }
+                }
+
+                function updateView(stage, reason) {
+                    var root = document.getElementById("root");
+                    if (!root) return;
+                    var labels = {
+                        checking: ["正在检查新版本", "确认页面资源是否完整"],
+                        loading: ["正在载入新版本", "同步最新界面与功能"],
+                        finishing: ["即将完成", "马上回到 LiToT"],
+                        manual: ["更新没有完成", "聊天数据仍安全保存在本机"],
+                    };
+                    var copy = labels[stage] || labels.loading;
+                    var manual = stage === "manual";
+                    /* v76.771 和启动画面同一套（head 里的 .litot-boot / .lt-bunny 样式）：兔子 + 文字 + 三颗小圆点；要手动点时兔子不动，换成按钮 */
+                    var bunny =
+                        '<svg class="lt-bunny is-alive" width="104" height="104" viewBox="0 0 120 120" aria-hidden="true"><g class="lt-bunny-bob"><g class="lt-bunny-outline"><g class="lt-bunny-earl"><path d="M45.4 65.6 C38.4 53.4 35.5 34.6 39.8 24.5 C43 17.5 50 17.2 53.9 24.2 C58.6 33.7 59.2 50.8 55.8 64.3 Z"/></g><g class="lt-bunny-earr"><path d="M64.7 64.4 C60.8 50.8 62.6 31.9 69.2 23.1 C74 17.2 80.9 18.5 82.9 26.3 C85.2 36.7 81.6 53.4 75.1 65.6 Z"/></g><path d="M60 57 C87 57 101 71 101 87 C101 103 84 111 60 111 C36 111 19 103 19 87 C19 71 33 57 60 57 Z"/></g><g class="lt-bunny-fill"><g class="lt-bunny-earl"><path d="M45.4 65.6 C38.4 53.4 35.5 34.6 39.8 24.5 C43 17.5 50 17.2 53.9 24.2 C58.6 33.7 59.2 50.8 55.8 64.3 Z"/></g><g class="lt-bunny-earr"><path d="M64.7 64.4 C60.8 50.8 62.6 31.9 69.2 23.1 C74 17.2 80.9 18.5 82.9 26.3 C85.2 36.7 81.6 53.4 75.1 65.6 Z"/></g><path d="M60 57 C87 57 101 71 101 87 C101 103 84 111 60 111 C36 111 19 103 19 87 C19 71 33 57 60 57 Z"/></g><ellipse class="lt-bunny-eye" cx="44" cy="88" rx="3.1" ry="3.3"/><ellipse class="lt-bunny-eye" cx="76" cy="88" rx="3.1" ry="3.3"/><path class="lt-bunny-mouth" d="M54.6 94.6 C56.4 97.4 58.2 97.5 60 94.9 C61.8 97.5 63.6 97.4 65.4 94.6"/></g></svg>';
+                    root.innerHTML =
+                        '<div class="litot-boot" role="status" aria-live="polite">' +
+                        '<div class="litot-boot-inner">' +
+                        (manual
+                            ? bunny.replace(" is-alive", "") + '<div style="height:22px"></div>'
+                            : bunny + '<div class="litot-boot-shadow" aria-hidden="true"></div>') +
+                        '<div class="litot-boot-title">' +
+                        copy[0] +
+                        "</div>" +
+                        '<div class="litot-boot-note">' +
+                        copy[1] +
+                        "</div>" +
+                        (manual
+                            ? '<button id="litot-manual-recover" class="litot-boot-button">重新载入最新版</button>'
+                            : '<div class="litot-boot-dots" aria-hidden="true"><i></i><i></i><i></i></div>') +
+                        "</div>" +
+                        "</div>";
+                    if (manual) {
+                        var button = document.getElementById("litot-manual-recover");
+                        if (button)
+                            button.onclick = function () {
+                                /* KEY 已经搬到 localStorage 了（见上面那段）——
+                 这里还删 sessionStorage 的话，这颗"重新载入"按钮就是个空操作：
+                 限流器一直是满的，按几次都只会再看到这一页。 */
+                                var st = store();
+                                if (st) {
+                                    try {
+                                        st.removeItem(KEY);
+                                    } catch (_) {}
+                                }
+                                running = false;
+                                recover(reason || "manual", true);
+                            };
+                    }
+                }
+
+                function showManualRecovery(reason) {
+                    running = false;
+                    clearTimeout(stageTimer);
+                    updateView("manual", reason);
+                }
+
+                function recover(reason, force) {
+                    if (running) return;
+                    var now = Date.now();
+                    var state = readState();
+                    var recent = state.at && now - state.at < 90000;
+                    var count = force ? 1 : recent ? Number(state.count || 0) + 1 : 1;
+                    if (count > 2) {
+                        showManualRecovery(reason);
+                        return;
+                    }
+
+                    running = true;
+                    /* 这条账**不在开机时清掉**（以前是 __litotBooted 清的）。
+             清掉的话，"能启动但启动完就崩"这一类问题每一轮都从 1 数起，
+             限流器永远不触发 —— 那就是一个真正停不下来的重载循环。
+             现在靠时间衰减：90 秒内没再恢复过，下一次自然从 1 开始。 */
+                    writeKV(KEY, JSON.stringify({ at: now, count: count, reason: reason || "unknown" }));
+                    updateView("checking", reason);
+                    stageTimer = window.setTimeout(function () {
+                        updateView("loading", reason);
+                    }, 280);
+
+                    var jobs = [];
+                    if ("serviceWorker" in navigator) {
+                        jobs.push(
+                            navigator.serviceWorker
+                                .register(SW_URL, {
+                                    scope: "/ToT/",
+                                    updateViaCache: "none",
+                                })
+                                .then(function (reg) {
+                                    return reg.update().catch(function () {});
+                                })
+                                .catch(function () {}),
+                        );
+                    }
+                    if (window.caches) {
+                        jobs.push(
+                            caches
+                                .keys()
+                                .then(function (keys) {
+                                    /* v76.812 只是来了新版本时，按 hash 命名的文件缓存留着（文件名就是内容，旧的不会被用到）；
+                   资源加载出错时才连它一起清 */
+                                    /* v77.214 启动超时多半是网慢，不是文件坏了：同样留着已下好的文件，不然重新载入又得从头下 */
+                                    var keep = reason === "sw-update" || reason === "boot-timeout";
+                                    return Promise.all(
+                                        keys
+                                            .filter(function (key) {
+                                                return key.startsWith("litot-tot-") && !(
+                                                    keep &&
+                                                    (key === "litot-tot-assets" ||
+                                                        key === "litot-tot-pref" ||
+                                                        key === "litot-tot-shell")
+                                                );
+                                            })
+                                            .map(function (key) {
+                                                return caches.delete(key);
+                                            }),
+                                    );
+                                })
+                                .catch(function () {}),
+                        );
+                    }
+                    jobs.push(fetch("/ToT/?__litot_probe=" + now, { cache: "no-store" }).catch(function () {}));
+
+                    var work = Promise.all(jobs);
+                    var minimum = new Promise(function (resolve) {
+                        window.setTimeout(resolve, 760);
+                    });
+                    Promise.all([work, minimum]).then(function () {
+                        clearTimeout(stageTimer);
+                        updateView("finishing", reason);
+                        window.setTimeout(function () {
+                            /* v77.168 申请网页「前往注册」带来的 ?invite= 不能在恢复时丢掉 */
+                            var inv = /[?&]invite=([^&#]*)/.exec(location.search);
+                            location.replace("/ToT/?__litot_updated=" + now + (inv ? "&invite=" + inv[1] : ""));
+                        }, 360);
+                    });
+                }
+
+                window.__litotRecover = recover;
+                window.__litotBooted = function () {
+                    booted = true;
+                    running = false;
+                    clearTimeout(stageTimer);
+                    /* 只解除"正在恢复"，**不清那笔恢复账** —— 见 recover() 里那段注释。
+             启动成功不等于没事：崩在启动之后的那一类，正是靠这笔账才刹得住。 */
+                };
+
+                window.addEventListener(
+                    "error",
+                    function (event) {
+                        var target = event.target;
+                        var src = (target && (target.src || target.href)) || "";
+                        if (/\/(assets|src)\/.*\.(js|mjs|css)(\?|$)/.test(src)) recover("asset-error");
+                    },
+                    true,
+                );
+
+                window.addEventListener("unhandledrejection", function (event) {
+                    var message = String((event.reason && (event.reason.message || event.reason)) || "");
+                    if (
+                        /dynamically imported module|module script|failed to fetch|loading chunk/i.test(
+                            message,
+                        )
+                    )
+                        recover("module-rejection");
+                });
+
+                if ("serviceWorker" in navigator) {
+                    navigator.serviceWorker.addEventListener("message", function (event) {
+                        var data = event.data || {};
+                        var type = data.type;
+                        if (type === "asset-load-failed") {
+                            recover(type);
+                            return;
+                        }
+                        if (type === "sw-update-ready" || type === "sw-refresh") {
+                            var version = String(data.version || "unknown");
+                            /* 同一个版本只受控刷新一次，**跨会话**也算 ——
+                 这就是"闪退闪进"被掐断的地方。 */
+                            if (readKV(HANDLED_SW_KEY) === version) return;
+                            writeKV(HANDLED_SW_KEY, version);
+                            /* v76.812 页面本来就是这一版（刚下载的新 HTML），新 SW 生效不用再整页重载一遍 ——
+                 以前每次发版后第一次打开都要载入两遍，这是「进入超级慢」的一半。
+                 只有页面比 SW 旧（手机拿着旧 HTML）才需要刷新。 */
+                            if (version === PAGE_SW_VERSION) return;
+                            recover("sw-update");
+                        }
+                    });
+                    /* v76.348 这里以前跟着一句 reg.update()。浏览器在每次导航时本来就会
+             检查 SW 有没有更新，显式再查一次不会更快，只会多一次
+             "被判成新版本"的机会 —— 而每一次判成新版本就是一次整页重载。
+             真要强制查，走 recover() 那条路（那是用户按了重载，或者确实出事了）。 */
+                    navigator.serviceWorker
+                        .register("/ToT/sw.js?v=77.259-tot-pages1", {
+                            scope: "/ToT/",
+                            updateViaCache: "none",
+                        })
+                        .catch(function () {});
+                }
+
+                /* v77.214 用户：网差时（尤其安卓）打不开。以前 10 秒没启动就清掉全部缓存重新载入 ——
+           网慢时主脚本还没下完，这一刀把下到一半的和已经存好的都扔了，重新载入又从头下，下两轮就停在「更新没有完成」。
+           现在 10 秒时先看页面要的脚本和样式是否都已下完：还在下就继续等（每 5 秒看一次，最多等到 60 秒）；
+           都下完了还没启动，才是真的卡住，走恢复。 */
+                function stillLoading() {
+                    if (!window.performance || !performance.getEntriesByName) return false;
+                    var els = document.querySelectorAll(
+                        'script[type="module"][src], link[rel="modulepreload"][href], link[rel="stylesheet"][href]',
+                    );
+                    for (var i = 0; i < els.length; i++) {
+                        var u = els[i].src || els[i].href || "";
+                        if (u.indexOf("/ToT/assets/") < 0) continue;
+                        if (!performance.getEntriesByName(u).length) return true;
+                    }
+                    return false;
+                }
+                var bootStart = Date.now();
+                function bootCheck() {
+                    var root = document.getElementById("root");
+                    /* 启动画面是静态写在 #root 里的，所以「没启动」= 还是空的，或者还是启动画面 */
+                    if (
+                        booted ||
+                        !root ||
+                        !(root.childNodes.length === 0 || document.getElementById("litot-boot"))
+                    )
+                        return;
+                    if (stillLoading() && Date.now() - bootStart < 60000) {
+                        window.setTimeout(bootCheck, 5000);
+                        return;
+                    }
+                    recover("boot-timeout");
+                }
+                window.setTimeout(bootCheck, 10000);
+            })();
+        </script>
+
+        <script
+            type="module"
+            src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+            integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw=="
+            data-cf-beacon='{"version":"2024.11.0","token":"b211e16ffba84e65840190fadcf5cad5","r":1,"spa":2}'
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
