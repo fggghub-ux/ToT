@@ -1,4 +1,4 @@
-const SW_VERSION = "v77.259-tot-pages1";
+const SW_VERSION = "v77.259-tot-direct1";
 
 /* litot service worker
  * 目的：
@@ -18,12 +18,12 @@ const SW_VERSION = "v77.259-tot-pages1";
  *   拿到最新 index.html，chunk 名对上，恢复。
  *   这样以后再撞白屏，PWA 自动就能救回来，不用重装。 */
 
-const ASSET_CACHE = "litot-tot-assets";
+const ASSET_CACHE = "litot-tot-assets-direct1";
 /* v77.214 用户：网差时（尤其安卓）网页常常打不开。以前 HTML 每次只走网络，拿不到就是浏览器的错误页 ——
    静态文件明明都在 litot-assets 里，却因为几 KB 的 HTML 拿不到而整个打不开。
    现在每次拿到 HTML 都存一份（只留最新一份）；有存档时网络 4 秒没回来、或者直接失败，就先用存档打开，
    网络那一份在后台继续下完、存好，下次打开就是新的。没有存档（第一次打开）照旧只等网络。 */
-const SHELL_CACHE = "litot-tot-shell";
+const SHELL_CACHE = "litot-tot-shell-direct1";
 const SHELL_KEY = "/ToT/__litot_shell";
 const SHELL_WAIT_MS = 4000;
 /* vite 产物：assets/<名字>-<8 位 hash>.js|css。不带 hash 的不缓存 */
@@ -169,7 +169,7 @@ self.addEventListener("fetch", (event) => {
                     const hit = await cache.match(url.pathname);
                     if (hit && typeOk(url.pathname, hit)) return hit;
                     if (hit) await cache.delete(url.pathname); // 以前存进来的坏副本
-                    const response = await fetch(req);
+                    const response = await fetch(req, { cache: "no-cache" });
                     const good = response.ok && typeOk(url.pathname, response);
                     if (good && response.type === "basic") {
                         const copy = response.clone();

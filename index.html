@@ -340,7 +340,7 @@
            换成 localStorage：**同一个 SW 版本这辈子只受控刷新一次**。 */
                 var KEY = "__litot_pwa_recovery_v4";
                 /* v76.812 这个页面自己属于哪一版（和下面 register 的地址是同一个，升版时两处一起改） */
-                var SW_URL = "/ToT/sw.js?v=77.259-tot-pages1";
+                var SW_URL = "/ToT/sw.js?v=77.259-tot-direct1";
                 var PAGE_SW_VERSION = "v" + SW_URL.split("v=")[1];
                 var HANDLED_SW_KEY = "__litot_sw_handled_version_v2";
                 var running = false;
@@ -487,9 +487,9 @@
                                             .filter(function (key) {
                                                 return key.startsWith("litot-tot-") && !(
                                                     keep &&
-                                                    (key === "litot-tot-assets" ||
+                                                    (key === "litot-tot-assets-direct1" ||
                                                         key === "litot-tot-pref" ||
-                                                        key === "litot-tot-shell")
+                                                        key === "litot-tot-shell-direct1")
                                                 );
                                             })
                                             .map(function (key) {
@@ -572,7 +572,7 @@
              "被判成新版本"的机会 —— 而每一次判成新版本就是一次整页重载。
              真要强制查，走 recover() 那条路（那是用户按了重载，或者确实出事了）。 */
                     navigator.serviceWorker
-                        .register("/ToT/sw.js?v=77.259-tot-pages1", {
+                        .register("/ToT/sw.js?v=77.259-tot-direct1", {
                             scope: "/ToT/",
                             updateViaCache: "none",
                         })

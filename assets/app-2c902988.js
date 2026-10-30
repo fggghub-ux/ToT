@@ -31418,7 +31418,7 @@ const Be = () => {
         if (!e) throw new Error("useStore must be within StateProvider");
         return e;
     },
-    sl = "v77.259-tot-pages1",
+    sl = "v77.259-tot-direct1",
     JN = "1.0.0",
     Sfe = "2026-10-29 20:23",
     Afe = "如更新后仍有不适配的问题，请注明设备、使用网页版还是 App，并附上问题截图继续反馈。",
@@ -46038,9 +46038,6 @@ function Hu() {
 function axe() {
     return localStorage.getItem(h$) || null;
 }
-function iG({ token: e, user: t }) {
-    (localStorage.setItem(h$, e), localStorage.setItem(m$, JSON.stringify(t)));
-}
 const r2 = new Set();
 function ixe(e) {
     return (r2.add(e), () => r2.delete(e));
@@ -46097,23 +46094,8 @@ async function an(e, { method: t = "GET", body: s, pairToken: o } = {}) {
     }
     return l || {};
 }
-async function rxe(e, t, s) {
-    const o = { handle: e, password: t };
-    s && (o.invite_code = s);
-    const a = await an("/v1/auth/register", { method: "POST", body: o });
-    return (iG(a), mO({ kind: "signin" }), a);
-}
-async function lxe(e, t, { forceKick: s = !1 } = {}) {
-    const o = { handle: e, password: t };
-    s && (o.force_kick = !0);
-    const a = await an("/v1/auth/login", { method: "POST", body: o });
-    return (iG(a), mO({ kind: "signin" }), a);
-}
 async function cxe(e, t) {
     return an("/v1/me/password", { method: "POST", body: { current_password: e, new_password: t } });
-}
-async function dxe(e, t, s) {
-    return an("/v1/auth/password-reset", { method: "POST", body: { handle: e, code: t, new_password: s } });
 }
 async function uxe() {
     return an("/v1/me/sessions");
@@ -66602,7 +66584,7 @@ function Ik() {
                     : "off"
         : "disabled";
 }
-const kX = "/ToT/sw.js?v=77.259-tot-pages1",
+const kX = "/ToT/sw.js?v=77.259-tot-direct1",
     jX = () => typeof location < "u" && /^\/beta(\/|$)/.test(location.pathname);
 async function kv() {
     if (!("serviceWorker" in navigator)) return { ok: !1, reason: "这个浏览器不支持 Service Worker" };
@@ -155582,42 +155564,7 @@ URL: ${e.url}`,
             }),
     });
 }
-const kne = 2,
-    Q1 = "用户须知与免责声明",
-    m8e = [
-        ["适用对象", "本应用面向已年满 18 周岁的成年女性用户。未满 18 周岁请勿注册或使用。"],
-        [
-            "虚构内容",
-            "应用中的角色、对话、情节、日程和社交动态均为虚构演绎，由你所选择的 AI 模型生成，不指向任何真实人物，也不代表开发者的立场。其中的内容不构成现实承诺，也不构成医疗、法律、心理等专业建议；现实中遇到困难，请向身边的人或专业机构求助。",
-        ],
-        [
-            "合法使用",
-            "不得利用本应用生成、保存或传播违法内容（包括但不限于涉及未成年人的性内容、暴力恐怖、毒品、赌博、诈骗），不得侵犯他人隐私、肖像、名誉或著作权，不得冒充真实人物或骚扰他人，不得从事任何违法活动。",
-        ],
-        [
-            "模型与接口",
-            "本应用不提供模型服务。你填写的接口地址和密钥由你自行获取、保管并负责；使用第三方接口时，请遵守其服务条款和你所在地的法律法规。",
-        ],
-        [
-            "数据",
-            "聊天、记忆、角色等内容保存在你自己的设备上；账号服务器只用于登录、推送等通道，不保存聊天正文。清除浏览器数据或卸载后无法恢复，请自行备份。",
-        ],
-        [
-            "非营利",
-            "本应用为免费、非营利项目。禁止转卖账号或邀请码；禁止将本应用或其中的任何部分（代码、界面、提示词、社区内容）二次分发、搭建镜像、改名上架，或用于任何盈利目的。",
-        ],
-        [
-            "低调使用",
-            "请勿在公开平台（社交媒体、视频平台、公共论坛等）大量宣传本应用、公开传播其中的成人向内容截图，或公开发放邀请码。",
-        ],
-        [
-            "责任承担",
-            "你对自己的使用行为及由此产生的内容负全部责任。因违反本须知、违法使用、二次传播，或因你自行配置的第三方服务而引起的任何纠纷、损失或法律责任，均由使用者自行承担，与开发者无关。本应用按现状提供，开发者不保证服务不中断、不出错，并有权随时调整功能或暂停服务。",
-        ],
-        ["违规处理", "违反本须知的，开发者有权不另行通知，注销账号、删除社区内容、收回邀请码。"],
-        ["须知更新", "本须知可能更新。更新后会请你重新确认；不同意的，请停止使用。"],
-    ],
-    jne = 1,
+const jne = 1,
     CKe = "社区发帖须知",
     EKe = [
         [
@@ -155642,7 +155589,6 @@ const kne = 2,
             "发现抄袭或侵权，可联系管理员处理；经核实的，内容会被删除，情节严重的注销账号。因发布内容引起的侵权等纠纷，由发布者自行承担，与开发者无关。",
         ],
     ],
-    Nne = "litot_terms_v1",
     $ne = "litot_community_terms",
     Sne = (e) => {
         try {
@@ -155656,558 +155602,11 @@ const kne = 2,
             localStorage.setItem(e, JSON.stringify(t));
         } catch {}
     },
-    GE = () => {
-        var e;
-        return Number((e = Sne(Nne)) == null ? void 0 : e.version) >= kne;
-    },
-    KE = (e = "") => Ane(Nne, { at: Date.now(), handle: e, version: kne }),
     _Ke = () => {
         var e;
         return Number((e = Sne($ne)) == null ? void 0 : e.version) >= jne;
     },
     IKe = () => Ane($ne, { at: Date.now(), version: jne });
-function p8e({ children: e }) {
-    const [t, s] = b.useState(() => (Hr() ? "in" : "out"));
-    (b.useEffect(() => {
-        const i = (l) => {
-                l.key === "litot_cloud_token" && s(Hr() ? "in" : "out");
-            },
-            r = ixe((l) => {
-                (l == null ? void 0 : l.kind) === "signout"
-                    ? s("out")
-                    : (l == null ? void 0 : l.kind) === "signin" && s("in");
-            });
-        return (
-            window.addEventListener("storage", i),
-            () => {
-                (window.removeEventListener("storage", i), r());
-            }
-        );
-    }, []),
-        b.useEffect(() => {
-            if (t === "in") return (yxe(), () => lG());
-        }, [t]));
-    const [o, a] = b.useState(GE);
-    return t === "in" && !o
-        ? n.jsx(g8e, {
-              onAgree: () => {
-                  (KE(), a(!0));
-              },
-          })
-        : t === "in"
-          ? e
-          : n.jsx(w8e, {
-                onEnter: () => {
-                    (a(GE()), s("in"));
-                },
-            });
-}
-function Tne() {
-    return n.jsx("div", {
-        className: "auth-modal-body auth-terms-text",
-        children: m8e.map(([e, t], s) =>
-            n.jsxs("p", { children: [n.jsxs("b", { children: [s + 1, ". ", e] }), "　", t] }, e),
-        ),
-    });
-}
-function f8e({ open: e, onClose: t }) {
-    return e
-        ? n.jsxs("div", {
-              className: "auth-modal-wrap",
-              role: "dialog",
-              "aria-modal": "true",
-              children: [
-                  n.jsx("div", { className: "auth-modal-backdrop", onClick: t }),
-                  n.jsxs("div", {
-                      className: "auth-modal",
-                      children: [
-                          n.jsx("div", { className: "auth-modal-title", children: Q1 }),
-                          n.jsx(Tne, {}),
-                          n.jsx("button", { className: "auth-submit", onClick: t, children: "我已阅读" }),
-                      ],
-                  }),
-              ],
-          })
-        : null;
-}
-function g8e({ onAgree: e }) {
-    const [t, s] = b.useState(!1);
-    return n.jsx("div", {
-        className: "auth-screen",
-        children: n.jsxs("div", {
-            className: "auth-card",
-            children: [
-                n.jsxs("div", { className: "auth-modal-title", children: [Q1, "已更新"] }),
-                n.jsx(Tne, {}),
-                n.jsxs("label", {
-                    className: "auth-terms-row",
-                    children: [
-                        n.jsx("input", {
-                            type: "checkbox",
-                            checked: t,
-                            onChange: (o) => s(o.target.checked),
-                        }),
-                        n.jsx("span", {
-                            children: "我已阅读并同意以上内容，确认自己是已年满 18 周岁的成年女性。",
-                        }),
-                    ],
-                }),
-                n.jsx("button", {
-                    className: "auth-submit",
-                    disabled: !t,
-                    onClick: e,
-                    children: "同意并继续",
-                }),
-                n.jsx("button", {
-                    type: "button",
-                    className: "auth-link",
-                    onClick: () => rG().catch(() => p$()),
-                    children: "不同意，退出登录",
-                }),
-            ],
-        }),
-    });
-}
-let Bp = null;
-function y8e() {
-    if (Bp !== null) return Bp;
-    Bp = "";
-    try {
-        const e = new URL(window.location.href);
-        if (!e.searchParams.has("invite")) return Bp;
-        ((Bp = (e.searchParams.get("invite") || "")
-            .toUpperCase()
-            .replace(/[^A-Z0-9-]/g, "")
-            .slice(0, 32)),
-            e.searchParams.delete("invite"),
-            window.history.replaceState(window.history.state, "", e.pathname + e.search + e.hash));
-    } catch {}
-    return Bp;
-}
-function w8e({ onEnter: e }) {
-    const [t] = b.useState(y8e),
-        [s, o] = b.useState(t ? "register" : "login"),
-        [a, i] = b.useState(""),
-        [r, l] = b.useState(""),
-        [c, d] = b.useState(t),
-        [u, h] = b.useState(""),
-        [p, m] = b.useState(""),
-        [f, g] = b.useState(!1),
-        [y, w] = b.useState(null),
-        [x, j] = b.useState(null),
-        [k, T] = b.useState(!1),
-        [S, $] = b.useState({ adult: !1, fiction: !1, legal: !1, agree: !1 }),
-        A = S.adult && S.fiction && S.legal && S.agree,
-        [C] = b.useState(() => !GE()),
-        [E, N] = b.useState(!1),
-        v = a.trim(),
-        M = v.toLowerCase(),
-        L = c
-            .trim()
-            .toUpperCase()
-            .replace(/[^A-Z0-9]/g, ""),
-        P =
-            /^[a-z0-9_.-]{3,32}$/.test(M) &&
-            r.length >= 8 &&
-            (s === "login" || L.length >= 4) &&
-            (s !== "register" || A) &&
-            (s !== "login" || !C || S.agree),
-        I = (H) => {
-            (o(H), h(""), m(""), w(null), j(null), T(!1), H !== "login" && l(""), d(""));
-        },
-        z = async ({ forceKick: H = !1 } = {}) => {
-            var G, O;
-            if (!(!P || f)) {
-                (h(""), T(!1), g(!0));
-                try {
-                    if (s === "register") (await rxe(v, r, L), KE(M));
-                    else if (s === "reset") {
-                        const V = await dxe(M, L, r);
-                        (o("login"),
-                            d(""),
-                            l(""),
-                            j(null),
-                            m(
-                                V != null && V.restored
-                                    ? "账号已恢复，请使用新密码登录。本设备上的数据仍然保留。"
-                                    : "密码已重置，请使用新密码登录。所有设备已退出登录。",
-                            ),
-                            g(!1));
-                        return;
-                    } else (await lxe(M, r, { forceKick: H }), S.agree && KE(M));
-                    (w(null), e());
-                } catch (V) {
-                    (V == null ? void 0 : V.status) === 409 &&
-                    ((G = V == null ? void 0 : V.payload) == null ? void 0 : G.error) === "too_many_devices"
-                        ? (w({ limit: V.payload.limit || 3, sessions: V.payload.sessions || [] }), h(""))
-                        : (V == null ? void 0 : V.status) === 403 &&
-                            ((O = V == null ? void 0 : V.payload) == null ? void 0 : O.error) ===
-                                "account_retired"
-                          ? (j(V.payload), h(""), w(null))
-                          : (h(x8e(V)),
-                            w(null),
-                            T(s === "login" && (V == null ? void 0 : V.message) === "bad_credentials"));
-                } finally {
-                    g(!1);
-                }
-            }
-        };
-    return n.jsxs("div", {
-        className: "auth-screen",
-        children: [
-            n.jsxs("div", {
-                className: "auth-card",
-                children: [
-                    n.jsxs("div", {
-                        className: "auth-brand",
-                        children: [
-                            n.jsx($d, { size: 68, alive: !0 }),
-                            n.jsx(vH, { width: 74, className: "auth-logo" }),
-                            n.jsx("div", {
-                                className: "auth-tagline",
-                                children:
-                                    s === "register"
-                                        ? "使用注册码注册"
-                                        : s === "reset"
-                                          ? "找回账号"
-                                          : "欢迎回来",
-                            }),
-                        ],
-                    }),
-                    n.jsxs("div", {
-                        className: "auth-tabs",
-                        children: [
-                            n.jsx("button", {
-                                className: s === "login" ? "on" : "",
-                                onClick: () => I("login"),
-                                children: "登录",
-                            }),
-                            n.jsx("button", {
-                                className: s === "register" ? "on" : "",
-                                onClick: () => I("register"),
-                                children: "注册",
-                            }),
-                        ],
-                    }),
-                    n.jsxs("label", {
-                        className: "auth-field",
-                        children: [
-                            n.jsx("span", { children: "用户名" }),
-                            n.jsx("input", {
-                                autoCapitalize: "none",
-                                autoCorrect: "off",
-                                spellCheck: !1,
-                                value: a,
-                                onChange: (H) => i(H.target.value),
-                                placeholder: "3–32 位字母、数字或 _ . -",
-                            }),
-                        ],
-                    }),
-                    n.jsxs("label", {
-                        className: "auth-field",
-                        children: [
-                            n.jsx("span", { children: s === "reset" ? "新密码" : "密码" }),
-                            n.jsx("input", {
-                                type: "password",
-                                autoComplete: s === "login" ? "current-password" : "new-password",
-                                value: r,
-                                onChange: (H) => l(H.target.value),
-                                placeholder: "至少 8 位",
-                            }),
-                        ],
-                    }),
-                    s !== "login" &&
-                        n.jsxs("label", {
-                            className: "auth-field",
-                            children: [
-                                n.jsx("span", { children: s === "reset" ? "重置码 / 恢复码" : "注册码" }),
-                                n.jsx("input", {
-                                    autoCapitalize: "characters",
-                                    autoCorrect: "off",
-                                    spellCheck: !1,
-                                    value: c,
-                                    onChange: (H) => d(H.target.value.toUpperCase()),
-                                    placeholder:
-                                        s === "reset" ? "由管理员提供，仅可使用一次" : "请输入已获得的注册码",
-                                    style: {
-                                        letterSpacing: 3,
-                                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                                    },
-                                }),
-                            ],
-                        }),
-                    s === "register" &&
-                        n.jsxs("div", {
-                            className: "auth-terms auth-box is-info",
-                            children: [
-                                n.jsx("div", { className: "auth-terms-head", children: "注册须知" }),
-                                n.jsx("p", {
-                                    children:
-                                        "本应用是面向成年女性的非营利虚拟角色扮演应用，包含成人向虚构内容。",
-                                }),
-                                [
-                                    ["adult", "我是已年满 18 周岁的成年女性。"],
-                                    ["fiction", "我了解应用中的角色、对话和情节均为虚构演绎。"],
-                                    ["legal", "我不会利用本应用生成、传播违法内容或从事违法活动。"],
-                                    [
-                                        "agree",
-                                        n.jsxs(n.Fragment, {
-                                            children: [
-                                                "我已阅读并同意",
-                                                n.jsxs("button", {
-                                                    type: "button",
-                                                    className: "auth-inline-link",
-                                                    onClick: (H) => {
-                                                        (H.preventDefault(), N(!0));
-                                                    },
-                                                    children: ["《", Q1, "》"],
-                                                }),
-                                                "，包括禁止二次分发和盈利、不在公开平台宣传，以及因违规使用产生的责任由本人承担。",
-                                            ],
-                                        }),
-                                    ],
-                                ].map(([H, G]) =>
-                                    n.jsxs(
-                                        "label",
-                                        {
-                                            className: "auth-terms-row",
-                                            children: [
-                                                n.jsx("input", {
-                                                    type: "checkbox",
-                                                    checked: S[H],
-                                                    onChange: (O) =>
-                                                        $((V) => ({ ...V, [H]: O.target.checked })),
-                                                }),
-                                                n.jsx("span", { children: G }),
-                                            ],
-                                        },
-                                        H,
-                                    ),
-                                ),
-                            ],
-                        }),
-                    s === "login" &&
-                        C &&
-                        n.jsxs("label", {
-                            className: "auth-terms-row auth-login-agree",
-                            children: [
-                                n.jsx("input", {
-                                    type: "checkbox",
-                                    checked: S.agree,
-                                    onChange: (H) => $((G) => ({ ...G, agree: H.target.checked })),
-                                }),
-                                n.jsxs("span", {
-                                    children: [
-                                        "我已阅读并同意",
-                                        n.jsxs("button", {
-                                            type: "button",
-                                            className: "auth-inline-link",
-                                            onClick: (H) => {
-                                                (H.preventDefault(), N(!0));
-                                            },
-                                            children: ["《", Q1, "》"],
-                                        }),
-                                    ],
-                                }),
-                            ],
-                        }),
-                    p && n.jsx("div", { className: "auth-box is-ok", children: p }),
-                    u && !k && n.jsx("div", { className: "auth-error auth-box is-err", children: u }),
-                    k &&
-                        n.jsxs("div", {
-                            className: "auth-why auth-box is-err",
-                            children: [
-                                n.jsx("div", { className: "auth-box-head", children: "用户名或密码错误" }),
-                                n.jsxs("ol", {
-                                    className: "auth-why-list",
-                                    children: [
-                                        n.jsx("li", {
-                                            children:
-                                                "请核对用户名的拼写（不区分大小写，不含空格）。忘记密码请联系管理员获取重置码。",
-                                        }),
-                                        n.jsx("li", {
-                                            children:
-                                                "账号可能因长期未使用已被注销，请联系管理员获取恢复码。",
-                                        }),
-                                        n.jsx("li", {
-                                            children: "本设备上的聊天和记忆不受影响，恢复账号后仍会保留。",
-                                        }),
-                                    ],
-                                }),
-                            ],
-                        }),
-                    y &&
-                        n.jsxs(n.Fragment, {
-                            children: [
-                                n.jsxs("div", {
-                                    className: "auth-devices-block auth-box is-err",
-                                    children: [
-                                        n.jsxs("div", {
-                                            className: "auth-box-head",
-                                            children: ["该账号已在 ", y.limit, " 台设备登录"],
-                                        }),
-                                        "继续登录将使其他设备全部退出。",
-                                        n.jsx("ul", {
-                                            className: "auth-devices-list",
-                                            children: y.sessions.map((H) =>
-                                                n.jsxs(
-                                                    "li",
-                                                    {
-                                                        children: [
-                                                            H.device_label || "未知设备",
-                                                            " · ",
-                                                            v8e(H.last_seen_at),
-                                                        ],
-                                                    },
-                                                    H.id,
-                                                ),
-                                            ),
-                                        }),
-                                    ],
-                                }),
-                                n.jsx("button", {
-                                    type: "button",
-                                    className: "auth-submit",
-                                    disabled: f,
-                                    onClick: () => z({ forceKick: !0 }),
-                                    children: f ? "…" : "退出其他设备并登录",
-                                }),
-                                n.jsx("button", {
-                                    type: "button",
-                                    className: "auth-ghost",
-                                    onClick: () => w(null),
-                                    children: "取消",
-                                }),
-                            ],
-                        }),
-                    !y &&
-                        n.jsx("button", {
-                            className: "auth-submit",
-                            disabled: !P || f,
-                            onClick: () => z(),
-                            children: f
-                                ? "…"
-                                : s === "register"
-                                  ? "注册"
-                                  : s === "reset"
-                                    ? "重置密码"
-                                    : "登录",
-                        }),
-                    s !== "register" &&
-                        n.jsx("button", {
-                            type: "button",
-                            className: "auth-link",
-                            onClick: () => I(s === "reset" ? "login" : "reset"),
-                            children: s === "reset" ? "返回登录" : "忘记密码或账号已注销？",
-                        }),
-                    n.jsx("div", {
-                        className: "auth-note",
-                        children:
-                            "聊天、记忆等数据仅保存在本设备，清除浏览器数据后无法恢复。每个账号最多同时登录 3 台设备；15 天内累计在线不足 2 小时的账号将被自动注销。",
-                    }),
-                    n.jsx("div", { className: "auth-version", children: JN }),
-                ],
-            }),
-            n.jsx(f8e, { open: E, onClose: () => N(!1) }),
-            n.jsx(b8e, {
-                info: x,
-                onClose: () => j(null),
-                onGoReset: () => {
-                    (j(null), I("reset"), i(M));
-                },
-            }),
-        ],
-    });
-}
-function b8e({ info: e, onClose: t, onGoReset: s }) {
-    if (!e) return null;
-    const o = Math.floor((Number(e.online_seconds) || 0) / 3600),
-        a = Math.round(((Number(e.online_seconds) || 0) % 3600) / 60),
-        i = o > 0 ? `${o} 小时 ${a} 分钟` : `${a} 分钟`,
-        r = Number(e.window_days) || 15,
-        l = Math.round((Number(e.required_seconds) || 7200) / 3600);
-    return n.jsxs("div", {
-        className: "auth-modal-wrap",
-        role: "dialog",
-        "aria-modal": "true",
-        children: [
-            n.jsx("div", { className: "auth-modal-backdrop", onClick: t }),
-            n.jsxs("div", {
-                className: "auth-modal",
-                children: [
-                    n.jsx("div", { className: "auth-modal-title", children: "账号已注销" }),
-                    n.jsxs("div", {
-                        className: "auth-modal-body",
-                        children: [
-                            n.jsxs("p", {
-                                children: [
-                                    "账号「",
-                                    e.handle,
-                                    "」因 ",
-                                    r,
-                                    " 天内累计在线不足 ",
-                                    l,
-                                    " 小时，已被系统自动注销。",
-                                ],
-                            }),
-                            n.jsxs("div", {
-                                className: "auth-modal-facts",
-                                children: [
-                                    n.jsxs("div", {
-                                        children: [
-                                            n.jsx("span", { children: "注销时间" }),
-                                            n.jsx("b", { children: qW(e.retired_at) }),
-                                        ],
-                                    }),
-                                    n.jsxs("div", {
-                                        children: [
-                                            n.jsx("span", { children: "累计在线" }),
-                                            n.jsx("b", { children: i }),
-                                        ],
-                                    }),
-                                    e.created_at &&
-                                        n.jsxs("div", {
-                                            children: [
-                                                n.jsx("span", { children: "注册时间" }),
-                                                n.jsx("b", { children: qW(e.created_at) }),
-                                            ],
-                                        }),
-                                ],
-                            }),
-                            n.jsx("p", {
-                                children:
-                                    "请联系管理员获取恢复码，在「找回账号」中填写后即可恢复。本设备上的聊天和记忆不受影响。",
-                            }),
-                        ],
-                    }),
-                    n.jsx("button", { className: "auth-submit", onClick: s, children: "使用恢复码" }),
-                    n.jsx("button", {
-                        type: "button",
-                        className: "auth-modal-ghost",
-                        onClick: t,
-                        children: "知道了",
-                    }),
-                ],
-            }),
-        ],
-    });
-}
-function qW(e) {
-    try {
-        const t = new Date(e);
-        return isFinite(t.getTime())
-            ? t.toLocaleString("zh-CN", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-              })
-            : "—";
-    } catch {
-        return "—";
-    }
-}
 function v8e(e) {
     try {
         const t = new Date(e).getTime(),
@@ -156220,43 +155619,6 @@ function v8e(e) {
         return a < 24 ? `${a} 小时前` : `${Math.floor(a / 24)} 天前`;
     } catch {
         return "";
-    }
-}
-function x8e(e) {
-    const t = (e == null ? void 0 : e.message) || "unknown";
-    switch (t) {
-        case "invite_required":
-            return "请输入注册码";
-        case "invite_invalid":
-            return "注册码无效";
-        case "invite_used":
-            return "注册码已被使用";
-        case "bad_handle":
-            return "用户名需为 3–32 位字母、数字或 _ . -";
-        case "bad_password":
-            return "密码至少 8 位";
-        case "handle_taken":
-            return "用户名已被占用";
-        case "bad_credentials":
-            return "用户名或密码错误";
-        case "reset_invalid":
-            return "重置码或恢复码无效、已使用或已过期";
-        case "account_retired":
-            return "账号已注销，请联系管理员获取恢复码";
-        case "bad_current_password":
-            return "当前密码错误";
-        case "same_password":
-            return "新密码不能与旧密码相同";
-        case "no_such_user":
-            return "用户名不存在";
-        case "bad_input":
-            return "输入不合法";
-        case "session_revoked":
-            return "登录状态已失效，请重新登录";
-        case "session_missing":
-            return "登录已过期，请重新登录";
-        default:
-            return `操作失败（${t}）`;
     }
 }
 let Hk = null;
@@ -171429,17 +170791,15 @@ function oze() {
 }
 function aze() {
     return n.jsx(nie, {
-        children: n.jsx(p8e, {
-            children: n.jsxs($fe, {
-                children: [
-                    n.jsx(QHe, {}),
-                    n.jsx(oze, {}),
-                    n.jsx(Cae, {}),
-                    n.jsx(hie, {}),
-                    n.jsx(kAe, { children: n.jsx(XHe, {}) }),
-                    n.jsx(Mfe, {}),
-                ],
-            }),
+        children: n.jsxs($fe, {
+            children: [
+                n.jsx(QHe, {}),
+                n.jsx(oze, {}),
+                n.jsx(Cae, {}),
+                n.jsx(hie, {}),
+                n.jsx(kAe, { children: n.jsx(XHe, {}) }),
+                n.jsx(Mfe, {}),
+            ],
         }),
     });
 }
