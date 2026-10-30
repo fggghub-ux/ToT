@@ -1,0 +1,439 @@
+.mn-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 228px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #fff;
+}
+.mn-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    padding: 10px 16px;
+    color: inherit;
+}
+.mn-item:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+.mn-av {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: #cfd9de;
+}
+.mn-av img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    display: block;
+}
+.mn-av i {
+    font-style: normal;
+    font-weight: 700;
+    color: #fff;
+    font-size: 15px;
+}
+.mn-who {
+    min-width: 0;
+    display: grid;
+    gap: 1px;
+}
+.mn-who b,
+.mn-who span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.mn-who b {
+    font-size: 15px;
+    font-weight: 700;
+}
+.mn-who span {
+    font-size: 14px;
+}
+.mn-x {
+    border-top: 1px solid #eff3f4;
+    border-bottom: 1px solid #eff3f4;
+}
+.mn-x .mn-who b {
+    color: #0f1419;
+}
+.mn-x .mn-who span {
+    color: #536471;
+}
+.mn-insta {
+    border-top: 0.5px solid rgba(0, 0, 0, 0.12);
+}
+.mn-insta .mn-item {
+    padding: 9px 16px;
+}
+.mn-insta .mn-av {
+    width: 34px;
+    height: 34px;
+}
+.mn-insta .mn-who b {
+    font-size: 14.5px;
+    font-weight: 400;
+    color: #999;
+    order: 2;
+}
+.mn-insta .mn-who span {
+    font-size: 14.5px;
+    color: #000;
+    font-weight: 600;
+    order: 1;
+}
+.mn-tube {
+    margin: 4px 0 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px #0000001f;
+}
+.mn-tube .mn-av {
+    width: 32px;
+    height: 32px;
+}
+.mn-tube .mn-who b {
+    font-size: 14px;
+    color: #0f0f0f;
+    font-weight: 500;
+}
+.mn-tube .mn-who span {
+    font-size: 12px;
+    color: #606060;
+}
+.mn-at {
+    cursor: pointer;
+}
+.mn-at-x {
+    color: #1d9bf0;
+}
+.mn-at-insta {
+    color: #0095f6;
+}
+.mn-at-tube {
+    color: #065fd4;
+}
+.mn-none {
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: #8e8e93;
+}
+.mn-at-btn {
+    display: inline-grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+}
+.dmp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 80;
+}
+.dmp-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: dmp-fade 0.16s ease both;
+}
+.dmp-ig .dmp-mask {
+    background: rgba(255, 255, 255, 0.9);
+}
+.dmp-x .dmp-mask,
+.dmp-yt .dmp-mask {
+    background: rgba(0, 0, 0, 0.38);
+}
+.dmp-mask.clear {
+    background: transparent !important;
+    animation: none;
+}
+@keyframes dmp-fade {
+    0% {
+        opacity: 0;
+    }
+}
+.dmp-react {
+    display: flex;
+    gap: 2px;
+    padding: 5px 6px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow:
+        0 0 0 0.5px #0000000f,
+        0 0 26px #00000024;
+    animation: dmp-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.dmp-react button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 38px;
+    text-align: center;
+    transition:
+        transform 0.12s ease,
+        background 0.15s;
+}
+.dmp-react button:active {
+    transform: scale(1.18);
+}
+.dmp-react button.on {
+    background: #efefef;
+}
+.dmp-x .dmp-react {
+    padding: 4px 6px;
+}
+.dmp-yt .dmp-react {
+    border-radius: 24px;
+}
+@keyframes dmp-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.86);
+    }
+}
+.dmp-lift {
+    display: block;
+    box-shadow:
+        0 0 0 0.5px #0000000a,
+        0 0 22px #0000001f;
+    animation: dmp-lift 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+    pointer-events: none;
+}
+@keyframes dmp-lift {
+    0% {
+        transform: scale(0.97);
+    }
+}
+.dmp-menu {
+    width: 232px;
+    overflow: hidden;
+    background: #fff;
+    animation: dmp-pop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+.dmp-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    text-align: left;
+    transition: background 0.12s;
+}
+.dmp-item:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+.dmp-item.danger {
+    color: #ed4956;
+}
+.dmp-time {
+    padding: 9px 16px 7px;
+    font-size: 12px;
+    color: #737373;
+}
+.dmp-ask {
+    padding: 12px 16px 10px;
+}
+.dmp-ask b {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+}
+.dmp-ask small {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: #737373;
+}
+.dmp-ig .dmp-menu {
+    border-radius: 14px;
+    box-shadow:
+        0 0 0 0.5px #0000000f,
+        0 0 30px #00000024;
+}
+.dmp-ig .dmp-item {
+    font-size: 15px;
+    color: #000;
+}
+.dmp-ig .dmp-item.danger {
+    color: #ed4956;
+}
+.dmp-ig .dmp-item + .dmp-item,
+.dmp-ig .dmp-time + .dmp-item,
+.dmp-ig .dmp-ask + .dmp-item {
+    box-shadow: inset 0 0.5px #0000001a;
+}
+.dmp-x .dmp-menu {
+    border-radius: 14px;
+    font-family:
+        -apple-system,
+        SF Pro Text,
+        Helvetica Neue,
+        sans-serif;
+    box-shadow: 0 0 30px #0003;
+}
+.dmp-x .dmp-item {
+    font-size: 16px;
+    color: #0f1419;
+}
+.dmp-x .dmp-item.danger {
+    color: #f4212e;
+}
+.dmp-x .dmp-item + .dmp-item,
+.dmp-x .dmp-time + .dmp-item,
+.dmp-x .dmp-ask + .dmp-item {
+    box-shadow: inset 0 0.5px #cfd9de;
+}
+.dmp-x .dmp-time {
+    color: #536471;
+}
+.dmp-yt .dmp-menu {
+    width: 220px;
+    padding: 6px 0;
+    border-radius: 12px;
+    font-family:
+        Roboto,
+        -apple-system,
+        Helvetica Neue,
+        sans-serif;
+    box-shadow: 0 0 24px #0000002e;
+}
+.dmp-yt .dmp-item {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 16px;
+    height: 46px;
+    font-size: 14px;
+    color: #0f0f0f;
+}
+.dmp-yt .dmp-item.danger {
+    color: #c00;
+}
+.dmp-yt .dmp-time {
+    padding: 6px 16px 8px;
+    color: #606060;
+}
+.dmp-pop .dmp-menu {
+    animation-duration: 0.16s;
+}
+.dmr {
+    position: absolute;
+    bottom: -13px;
+    left: 10px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    min-width: 26px;
+    height: 24px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #efefef;
+    box-shadow: 0 0 0 2px #fff;
+    font-size: 14px;
+    line-height: 1;
+}
+.dmr.mine {
+    left: auto;
+    right: 10px;
+}
+.dmc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+}
+.dmc-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.32);
+    animation: dmp-fade 0.16s ease both;
+}
+.dmc-box {
+    position: relative;
+    width: 270px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(250, 250, 250, 0.98);
+    text-align: center;
+    animation: dmp-pop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+.dmc-copy {
+    padding: 19px 16px 15px;
+}
+.dmc-copy b {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+.dmc-copy p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #3a3a3c;
+}
+.dmc-act {
+    display: block;
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    color: #131315;
+    box-shadow: inset 0 0.5px #00000024;
+}
+.dmc-act.danger {
+    color: #ff3b30;
+}
+.dmc-act.strong {
+    font-weight: 600;
+}
+.dmc-act:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+@media (prefers-reduced-motion: reduce) {
+    .dmp-mask,
+    .dmp-react,
+    .dmp-lift,
+    .dmp-menu,
+    .dmc-mask,
+    .dmc-box {
+        animation: none;
+    }
+}
+.dmp.dmp-fixed {
+    position: fixed;
+    z-index: 4000;
+}
+.dmp-x .dmp-item.on,
+.dmp-x .dmp-item.on svg {
+    color: #0f1419;
+}
